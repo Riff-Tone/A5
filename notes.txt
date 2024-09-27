@@ -1,0 +1,11 @@
+#  notes i guess
+
+09/26/24,  9:29am
+alright created the insert player function, the idea is that it will memory allocate a player node, and set its state to the arguments that are  passed, and when we have more than one player we will then begin a secion fucntion that will order them properly,
+
+so i ran into a problem at line 45 "strcpy(node->playerName,Name);" invloving setting the pointer node's PLayername to the argument that was passed Name, i get the error "Thread 1: EXC_BAD_ACCESS (code=1, address=0xc)" what ever that means, i guess the only leading theory i have is the getNewPlayer() function maybe it isnt correcly passing the arguments or something,
+
+github is being weird rn
+
+9/26/24 8:02pm
+  github please work im getting pissed of that it wont update
