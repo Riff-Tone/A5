@@ -38,21 +38,28 @@ int playersInScoreBoard;
 void insertPlayer(char Name[size], char Score[size]){
 	//creates player node in the heap, then we set Name and parse score, into the struct of node
 	Player *node = (Player *)malloc(sizeof(Player));
-	if (node != NULL) {
-		 printf("Memory allocation did not failed\n");
+	if (node == NULL) {
+		 printf("Memory allocation failed\n");
 		 return;
 	}
-	node->score=atoi(Score);
+	
+	node->score = atoi(Score);
 	
 	if(head != NULL){//after the first game we will have players so this will be true most of the time
 
 		return;
 	}
 	//for first games/empty file we need to set the new player as the lead,
+	node->next=NULL;
 	head = node;
 }
 
+
 void printInfo(void){
+	if (head == NULL) {
+		 printf("No players in the scoreboard.\n");
+		 return;
+	}
 	printf("%s, %d", head->playerName, head->score);
 }
 
@@ -112,7 +119,15 @@ void getNewPlayer(void){
 	char newPlayer[size];
 	printf("Enter name: ");
 	scanf("%10c",newPlayer);
-	insertPlayer(newPlayer, 0);
+	char score[] ={'2','3'};
+	
+	insertPlayer(newPlayer, score);
+	
+	for (int i=0; i<size; i++) {
+		printf("%c",newPlayer[i]);
+	}
+	
+//	insertPlayer(newPlayer, 0);
 }
 
 int main(int argc, const char * argv[]) {
