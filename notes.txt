@@ -14,3 +14,15 @@
 	alright another look at it and im an idiot on getNewPlayer function, i called input player and set the score as 0, but the parameter of inputPLayer is an array of char, so giving an into to an array will cause problems.
 	duh, what an idiot. On God...
 	tomorrow try to see if playername is valid to add, also maybe we should you argument int instead, we can parse array char before we give it as an argument for inputPLayer function idk think about it
+09/27/24
+7:46am
+	I just had a dream, i was working on this program in my dream and i realized that arrays are the way to go, reason being is less code, i can still make it work but i will have xtra functions for linked list, now how would i make the arrays work all i need is a size 5 array, i need a function that reads the file duh, and when the user creates a new player and its guesss, all i need to do is find where the new player lands on the array, now i dont need to update the array i just need to update the file, with the new player, and use my array to complete the rest, once that is done i need to re-read the file, re-use the same functino, to get the updated list, once I get to the library we need a whole new rework.
+9:14am
+ALRIGHT now i need to handle the array properly to do that i need a function that
+first checks if the amout of players in the scoreboard,
+we must preset the lowerst score of -1,
+	if (newPlayerscore < lowest score), then we check if scoreboard ==5 if so we ignore that score and make no edits
+	else{call the function that properly updates the file and resets the array with updated info }
+	if ( newplayerscore > lowest score), we need to call function that properly updates the file and resets the array with updated info goes through the array and checks if the sore of newplayer is greater than if so we stop the now and
+	
+10:01am, after arriving at the library, i inputed those inputs and all i need is to handle it. now i realized i havent even made the game, like where is the data to indert i should have started with that, what an idiot...

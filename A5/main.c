@@ -26,41 +26,38 @@
 typedef struct Player {
 	 char playerName[size];
 	 int score;
-	 struct Player *next;
 } Player;
 
-Player *head = NULL;// first place!!!
+Player scoreBoard[5];// first place!!!
 
-int topScore;
-int lowestScore;
-int playersInScoreBoard;
+int topScore =0;
+int lowestScore = -1;
+int playersInScoreBoard = 0;
 
-void insertPlayer(char Name[size], char Score[size]){
-	//creates player node in the heap, then we set Name and parse score, into the struct of node
-	Player *node = (Player *)malloc(sizeof(Player));
-	if (node == NULL) {
-		 printf("Memory allocation failed\n");
-		 return;
+void insertPlayer(Player yur){
+	if(playersInScoreBoard != 5 && yur.score < lowestScore){
+
 	}
-	
-	node->score = atoi(Score);
-	
-	if(head != NULL){//after the first game we will have players so this will be true most of the time
+	if(yur.score > lowestScore){
 
-		return;
 	}
-	//for first games/empty file we need to set the new player as the lead,
-	node->next=NULL;
-	head = node;
+	scoreBoard[playersInScoreBoard] = yur;
+}
+void setPlayer(char Name[size], int Score){
+	// at this stage im assuming the player has finsihed the game, meaning name and score has already been set by the player.
+	
+	Player newPlayer;
+	strcpy(newPlayer.playerName, Name);
+	newPlayer.score = Score;
+	insertPlayer(newPlayer);
+	
 }
 
 
 void printInfo(void){
-	if (head == NULL) {
-		 printf("No players in the scoreboard.\n");
-		 return;
+	for (int i =0; i<5; i++) {
+		printf("%p",&scoreBoard[i]);
 	}
-	printf("%s, %d", head->playerName, head->score);
 }
 
 
@@ -79,7 +76,7 @@ const char *FILENAME ="Champions.txt";
 
 		while((c=fgetc(fp)) != EOF){
 			if(c == '\n'){
-				insertPlayer(Name, Score);
+				setPlayer(Name, atoi(Score));
 				for(int i=0;i<size;i++){
 					Score[i] = '\0';
 					Name[i] = '\0';
@@ -118,10 +115,11 @@ char toQuit(void){ //from A4
 void getNewPlayer(void){
 	char newPlayer[size];
 	printf("Enter name: ");
-	scanf("%10c",newPlayer);
-	char score[] ={'2','3'};
+	scanf("%10c",newPlayer); //i need to properly make sure if the name inserted is less than 10char i need it to still read it and save the name
 	
-	insertPlayer(newPlayer, score);
+	char score[] ={'2','3'}; // replace this with the gae fucntion that returns the num of guesses of the player. so we wont need atoi, since the function will keep track in ints
+	
+	setPlayer(newPlayer, atoi(score));
 	
 	for (int i=0; i<size; i++) {
 		printf("%c",newPlayer[i]);
