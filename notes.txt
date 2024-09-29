@@ -26,3 +26,9 @@ we must preset the lowerst score of -1,
 	if ( newplayerscore > lowest score), we need to call function that properly updates the file and resets the array with updated info goes through the array and checks if the sore of newplayer is greater than if so we stop the now and
 	
 10:01am, after arriving at the library, i inputed those inputs and all i need is to handle it. now i realized i havent even made the game, like where is the data to indert i should have started with that, what an idiot...
+
+09/29/24
+	1:00pm shit i forgot about this, what i need to do is write an algo to properly inserts the new board, i need to fix the bug, of name input, i need to make sure readfile() works and i need to write writeFile() function
+	
+	1:33pm ok, algo done, bugs fixed, and readfile() kinda works, it doesn read anything above line 1, need to figure that out. and need to make writeFile() also check if the readfile correctly makes a champions.txt file and see if we can imply direction, like instead of /user/hj/document/.... its just 'champions.txt"
+	also i suspect that i can reducde the readFile() but idk, think about it......

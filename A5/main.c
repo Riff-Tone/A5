@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <math.h>
 
 #define size 10
 
@@ -28,20 +29,60 @@ typedef struct Player {
 	 int score;
 } Player;
 
-Player scoreBoard[5];// first place!!!
+Player scoreBoard[5];
 
-int topScore =0;
-int lowestScore = -1;
 int playersInScoreBoard = 0;
 
-void insertPlayer(Player yur){
-	if(playersInScoreBoard != 5 && yur.score < lowestScore){
-
+void initalizeArray(void){
+	for(int i =0; i<5;i++){
+		scoreBoard[i].score = -1;
 	}
-	if(yur.score > lowestScore){
+}
 
+void updateArray(Player champ){
+	int playerScore = champ.score;
+	int index = -1;
+	
+	for(int i=0;i<5;i++){ //finds an index where the champ, belongs
+		if(scoreBoard[i].score == -1){ //finds an empty element and sets it to champ, therfore we  dont need to continue.
+			scoreBoard[i] = champ;
+			return;
+		}
+		if(scoreBoard[i].score > playerScore){
+			index = i;
+			break;
+		}
 	}
-	scoreBoard[playersInScoreBoard] = yur;
+	
+	Player updatedArray[5];
+	//fills the updated array
+	for(int i = 0;i<index;i++){
+		updatedArray[i] = scoreBoard[i];
+	}
+	
+	updatedArray[index] = champ;
+	
+	for (int i = index; i<4; i++) {
+		updatedArray[i+1] = scoreBoard[i];
+	}
+	
+	//sets scoreboard to the updated array
+	for (int i =0; i<5; i++) {
+		scoreBoard[i] = updatedArray[i];
+	}
+}
+
+void insertPlayer(Player champ){
+	//lowest score means the highest guess a player made.
+	int lowestScore = scoreBoard[playersInScoreBoard].score;
+	
+	if(playersInScoreBoard==0){scoreBoard[0] = champ;}
+	
+	if(playersInScoreBoard ==5 && champ.score > lowestScore){return;}
+	
+	updateArray(champ);
+	playersInScoreBoard++;
+	//make writeFile function,
 }
 void setPlayer(char Name[size], int Score){
 	// at this stage im assuming the player has finsihed the game, meaning name and score has already been set by the player.
@@ -54,16 +95,16 @@ void setPlayer(char Name[size], int Score){
 }
 
 
-void printInfo(void){
-	for (int i =0; i<5; i++) {
-		printf("%p",&scoreBoard[i]);
+void printBoard(void){
+	for (int i =0; i<playersInScoreBoard; i++) {
+		printf("%s\n",scoreBoard[i].playerName);
 	}
 }
 
 
 void readFile(void){
 //here we need to open the file, if it does not exist we create it
-const char *FILENAME ="Champions.txt";
+const char *FILENAME ="/Users/riff/Documents/cse240/A5/Champions.txt";
 	FILE* fp = NULL;
 	fp = fopen(FILENAME,"r");
 
@@ -83,7 +124,6 @@ const char *FILENAME ="Champions.txt";
 				}
 				a=0;
 				b=0;
-			continue;
 			}
 			if (isalpha(c)) {
 				Name[a] = c;
@@ -97,6 +137,7 @@ const char *FILENAME ="Champions.txt";
 		return;
 	}
 	fp = fopen(FILENAME,"w");//if the file doesnt exist we create it
+	fclose(fp);
 }
 
 void clearInputBuffer(void) { //from A4
@@ -111,33 +152,60 @@ char toQuit(void){ //from A4
 	clearInputBuffer();
 	return input;
 }
-
+int guessScore(void){
+	int dumbassCounter = 0;
+	char w = 'w';
+	int randomNum =  rand() % (89) + 10;
+	float numToGuess = sqrt(randomNum);
+	int guess;
+	while(w =='w'){
+		printf("%fis the square root of what number?Guess a value between 10 and 100:",numToGuess);
+		scanf("%d",&guess);
+		clearInputBuffer();
+		if(guess == randomNum){
+			printf("Hell yeah!!!\n");
+			dumbassCounter++;
+			if(dumbassCounter == 1){
+				printf("You made %d guess\n", dumbassCounter);
+			}else{
+				printf("You made %d guesses\n", dumbassCounter);
+			}
+			break;
+		}
+		if(guess > randomNum){
+			printf("Too high, guess again: \n");
+			dumbassCounter++;
+		}
+		if(guess < randomNum){
+			printf("Too low, guess again: \n");
+			dumbassCounter++;
+		}
+	}
+	return dumbassCounter;
+}
 void getNewPlayer(void){
 	char newPlayer[size];
-	printf("Enter name: ");
-	scanf("%10c",newPlayer); //i need to properly make sure if the name inserted is less than 10char i need it to still read it and save the name
+	printf("Please enter your name to start: ");
+	scanf("%9s",newPlayer); //i need to properly make sure if the name inserted is less than 10char i need it to still read it and save the name
+	int score = guessScore();
 	
-	char score[] ={'2','3'}; // replace this with the gae fucntion that returns the num of guesses of the player. so we wont need atoi, since the function will keep track in ints
-	
-	setPlayer(newPlayer, atoi(score));
-	
-	for (int i=0; i<size; i++) {
-		printf("%c",newPlayer[i]);
-	}
-	
-//	insertPlayer(newPlayer, 0);
+	setPlayer(newPlayer, score);
 }
 
 int main(int argc, const char * argv[]) {
-	// char Game = toQuit();
+	initalizeArray();
 	readFile();
-	getNewPlayer();
-	printInfo();
-	// while(Game != 'q'){
-
-	// 	Game = toQuit();
-	// }
-	// printf("thanks for playing\n");
+	 char Game = toQuit();
+//	readFile();
+//	getNewPlayer();
+//	printInfo();
+	 while(Game != 'q'){
+		 getNewPlayer();
+		 printf("Here are the current leaders: \n");
+		 printBoard();
+	 	Game = toQuit();
+	 }
+	 printf("thanks for playing\n");
 	
 	return 0;
 }
