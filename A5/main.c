@@ -21,6 +21,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 #define size 10
 
@@ -54,36 +55,26 @@ void updateArray(Player champ){
 		}
 	}
 	
-	Player updatedArray[5];
-	//fills the updated array
-	for(int i = 0;i<index;i++){
-		updatedArray[i] = scoreBoard[i];
+	for (int i = 4; i > index; i--) { // nice much more compact,instead of 3 for loops, idiot...
+		 scoreBoard[i] = scoreBoard[i - 1];
 	}
-	
-	updatedArray[index] = champ;
-	
-	for (int i = index; i<4; i++) {
-		updatedArray[i+1] = scoreBoard[i];
-	}
-	
-	//sets scoreboard to the updated array
-	for (int i =0; i<5; i++) {
-		scoreBoard[i] = updatedArray[i];
-	}
+	scoreBoard[index] = champ;
 }
 
 void insertPlayer(Player champ){
 	//lowest score means the highest guess a player made.
-	int lowestScore = scoreBoard[playersInScoreBoard].score;
 	
-	if(playersInScoreBoard==0){scoreBoard[0] = champ;}
+	if(playersInScoreBoard==0){scoreBoard[0] = champ; playersInScoreBoard++; ; return;}
+	
+	int lowestScore = scoreBoard[playersInScoreBoard - 1].score;
 	
 	if(playersInScoreBoard ==5 && champ.score > lowestScore){return;}
 	
 	updateArray(champ);
-	playersInScoreBoard++;
+	if(playersInScoreBoard != 5){playersInScoreBoard++;}
 	//make writeFile function,
 }
+
 void setPlayer(char Name[size], int Score){
 	// at this stage im assuming the player has finsihed the game, meaning name and score has already been set by the player.
 	
@@ -91,54 +82,56 @@ void setPlayer(char Name[size], int Score){
 	strcpy(newPlayer.playerName, Name);
 	newPlayer.score = Score;
 	insertPlayer(newPlayer);
-	
 }
 
 
 void printBoard(void){
 	for (int i =0; i<playersInScoreBoard; i++) {
-		printf("%s\n",scoreBoard[i].playerName);
-	}
-}
-
-
-void readFile(void){
-//here we need to open the file, if it does not exist we create it
-const char *FILENAME ="/Users/riff/Documents/cse240/A5/Champions.txt";
-	FILE* fp = NULL;
-	fp = fopen(FILENAME,"r");
-
-	if(fp!=NULL){//the file does exist so we need to read it, its a bit ugly like me but it works i guess
-		int a = 0;
-		int b = 0;
-		char Score[size];
-		char Name[size];
-		char c;
-
-		while((c=fgetc(fp)) != EOF){
-			if(c == '\n'){
-				setPlayer(Name, atoi(Score));
-				for(int i=0;i<size;i++){
-					Score[i] = '\0';
-					Name[i] = '\0';
-				}
-				a=0;
-				b=0;
-			}
-			if (isalpha(c)) {
-				Name[a] = c;
-				a++;
-			} else if (isdigit(c)) {
-				Score[b] = c;
-				b++;
-			}
+		int guess = scoreBoard[i].score;
+		if(guess == 1){
+			printf("%d. %s with %d guess\n",i+1,scoreBoard[i].playerName, guess);
+		}else{
+			printf("%d. %s with %d guesses\n",i+1,scoreBoard[i].playerName, guess);
 		}
-		fclose(fp);
-		return;
 	}
-	fp = fopen(FILENAME,"w");//if the file doesnt exist we create it
-	fclose(fp);
 }
+
+
+void readFile(void) {
+	 // Define the file path
+	 const char *FILENAME = "/Users/riff/Documents/cse240/A5/Champions.txt";
+	 FILE* fp = fopen(FILENAME, "r");
+
+	 if (fp != NULL) {  // If the file exists
+		  char Name[size];
+		  int Score;
+
+		  while (fscanf(fp, "%d %s", &Score, Name) != EOF) {
+				setPlayer(Name, Score);
+		  }
+
+		  fclose(fp);
+	 } else {  // If the file doesn't exist, create it
+		  fp = fopen(FILENAME, "w");
+		  fclose(fp);
+	 }
+}
+
+void writeFile(void) {
+	 const char *FILENAME = "/Users/riff/Documents/cse240/A5/Champions.txt";
+	 FILE* fp = fopen(FILENAME, "w");
+
+	 //write the score to the file
+	 for (int i = 0; i < 5; i++) {
+		  // Checks to see if the score is valid (not -1 meaning uninitialized)
+		  if (scoreBoard[i].score != -1) {
+				fprintf(fp, "%d %s\n", scoreBoard[i].score, scoreBoard[i].playerName);
+		  }
+	 }
+
+	 fclose(fp);
+}
+
 
 void clearInputBuffer(void) { //from A4
 	 int c;
@@ -152,12 +145,15 @@ char toQuit(void){ //from A4
 	clearInputBuffer();
 	return input;
 }
+
 int guessScore(void){
+	srand((unsigned int)time(0)); //thank you stack overflow post from 10 years ago
 	int dumbassCounter = 0;
 	char w = 'w';
-	int randomNum =  rand() % (89) + 10;
+	int randomNum =  rand() % (91) + 10;
 	float numToGuess = sqrt(randomNum);
 	int guess;
+	
 	while(w =='w'){
 		printf("%fis the square root of what number?Guess a value between 10 and 100:",numToGuess);
 		scanf("%d",&guess);
@@ -174,15 +170,16 @@ int guessScore(void){
 		}
 		if(guess > randomNum){
 			printf("Too high, guess again: \n");
-			dumbassCounter++;
 		}
 		if(guess < randomNum){
 			printf("Too low, guess again: \n");
-			dumbassCounter++;
 		}
+		dumbassCounter++;
 	}
 	return dumbassCounter;
 }
+
+
 void getNewPlayer(void){
 	char newPlayer[size];
 	printf("Please enter your name to start: ");
@@ -193,19 +190,16 @@ void getNewPlayer(void){
 }
 
 int main(int argc, const char * argv[]) {
-	initalizeArray();
-	readFile();
-	 char Game = toQuit();
-//	readFile();
-//	getNewPlayer();
-//	printInfo();
-	 while(Game != 'q'){
+	char Game = toQuit();
+		initalizeArray();
+		readFile();
+	while(Game != 'q'){
 		 getNewPlayer();
 		 printf("Here are the current leaders: \n");
 		 printBoard();
 	 	Game = toQuit();
 	 }
+	writeFile();
 	 printf("thanks for playing\n");
-	
 	return 0;
 }

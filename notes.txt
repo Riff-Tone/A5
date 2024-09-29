@@ -32,3 +32,5 @@ we must preset the lowerst score of -1,
 	
 	1:33pm ok, algo done, bugs fixed, and readfile() kinda works, it doesn read anything above line 1, need to figure that out. and need to make writeFile() also check if the readfile correctly makes a champions.txt file and see if we can imply direction, like instead of /user/hj/document/.... its just 'champions.txt"
 	also i suspect that i can reducde the readFile() but idk, think about it......
+	
+	3:00pm alrigh sweet, everythings done and working, only issue, the file location on where the champinos txt file will be generated at, ill worry about that tomorrow. 
