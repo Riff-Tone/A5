@@ -86,7 +86,7 @@ void printBoard(void){
 
 void readFile(void) {
 	 // Define the file path
-	 const char *FILENAME = "/Users/riff/Documents/cse240/A5/Champions.txt";
+	 const char *FILENAME = "Champions.txt";
 	 FILE* fp = fopen(FILENAME, "r");
 
 	 if (fp != NULL) {  // If the file exists
@@ -105,7 +105,7 @@ void readFile(void) {
 }
 
 void writeFile(void) {
-	 const char *FILENAME = "/Users/riff/Documents/cse240/A5/Champions.txt";
+	 const char *FILENAME = "Champions.txt";
 	 FILE* fp = fopen(FILENAME, "w");
 
 	 //write the score to the file
@@ -138,7 +138,7 @@ int guessScore(void){
 	int dumbassCounter = 0;
 	char w = 'w';
 	int randomNum =  rand() % (91) + 10;
-	float numToGuess = sqrt(randomNum);
+	double numToGuess = sqrt(randomNum);
 	int guess;
 	
 	while(w =='w'){
