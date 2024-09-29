@@ -1,19 +1,6 @@
 /*
  * Created on september 25 1:08pm
  * by Diego Gayosso Hernandez on xcode
- *
- *Alright game plan
- *When the program first executes i want it to read the champion.txt file, to get the record of the previous players
- * So i need a function that reads the file, another that sets the players info, and another that orders them correctly
- *
- *then the easy part, get name from player, create struct from them and play the game, count the number of guess till they get it right
- *
- *then we check if we have more than 5 players, and if the user score is less than or equal to the top or more than the bottom,
- * promt them the leader board, this function will start at the head node, and iterate till we get to the last
- * repeat till the user, quits the game, there we rewrite the champion file and put our new scoreboard
- * in formal of score playName
- * in each new line.
- *
  */
 
 #include <stdio.h>
